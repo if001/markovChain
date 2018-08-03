@@ -23,7 +23,7 @@ class ProbabilityState():
 
     def get_given_char_prob_dist(self, char):
         c_idx = self.__unique_char_set.index(char)
-        return self.__transition_cnt[c_idx][::]
+        return self.__transition_cnt[c_idx] / sum(self.__transition_cnt[c_idx])
 
     def count_up_trainsition(self, char, transition_char):
         char_idx = self.__unique_char_set.index(char)

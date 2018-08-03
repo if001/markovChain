@@ -4,7 +4,7 @@ from probability_state import ProbabilityState
 
 
 def main():
-    sentence_list = FileOperator.f_open("./test2.txt")
+    sentence_list = FileOperator.f_open("./test.txt")
 
     flatten_char = StringOperator.array_string_to_flatten(sentence_list)
 
@@ -14,11 +14,29 @@ def main():
     print(unique_char_set)
     for sentence in sentence_list:
         for i in range(len(sentence) - 1):
-            print(sentence[i], sentence[i + 1])
             prob_state.count_up_trainsition(sentence[i], sentence[i + 1])
 
-    t = prob_state.get_trainsition_cnt()
-    w = prob_state.get_next_word_base_prob("あ")
+    sentence = ""
+    char = "窓"
+    loop = True
+    while(loop):
+        sentence += char
+        char = prob_state.get_next_word_base_prob(char)
+        if char == '\n':
+            loop = False
+    print(sentence)
+    print("--------------")
+
+    sentence = ""
+    char = "七"
+    loop = True
+    while(loop):
+        sentence += char
+        char = prob_state.get_next_word_base_prob(char)
+        if char == '\n':
+            loop = False
+    print(sentence)
+    print("--------------")
 
 
 if __name__ == "__main__":
