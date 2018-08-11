@@ -9,6 +9,6 @@ class FileOperator():
         return lines
 
     @classmethod
-    def f_write(cls, file_name, data):
+    def f_write(cls, file_name, data, spliter=","):
         with open(file_name, 'w') as f:
-            f.writelines(data)
+            f.write(spliter.join(data))

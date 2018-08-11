@@ -1,1 +1,4 @@
 src/__pycache__/*
+src/date/*
+src/image/*
+src/.DS_Store

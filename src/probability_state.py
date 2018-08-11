@@ -3,36 +3,43 @@ import numpy.random as np_rand
 
 
 class ProbabilityState():
-    def __init__(self, unique_char_set):
+    def __init__(self, state_len, fname, init_flag="init"):
         """
         p(y | x) = prob[x][y]
         sim_cnt[x][y]
         """
-        self.__unique_char_set = unique_char_set
+        self.__state_len = state_len
         tmp_arr = [
-            [0 for i in range(len(unique_char_set))]
-            for j in range(len(unique_char_set))
+            [0 for i in range(state_len)]
+            for j in range(state_len)
         ]
-        self.__transition_cnt = np.array(tmp_arr)
+        if init_flag == "init":
+            print("init trainsition count")
+            self.__transition_cnt = np.array(tmp_arr)
+        else:
+            print("load trainsition count:", fname)
+            self.__transition_cnt = self.load_prob(fname)
 
-    def cal_cond_prob(self, char, transition_char):
-        c_idx = self.__unique_char_set.index(char)
-        t_c_idx = self.__unique_char_set.index(transition_char)
-        return self.__transition_cnt[c_idx][t_c_idx] / \
-            sum(self.__transition_cnt[c_idx])
+    def cal_cond_prob(self, state, transition_state):
+        return self.__transition_cnt[state][transition_state] / \
+            sum(self.__transition_cnt[state])
 
-    def get_given_char_prob_dist(self, char):
-        c_idx = self.__unique_char_set.index(char)
-        return self.__transition_cnt[c_idx] / sum(self.__transition_cnt[c_idx])
+    def get_given_state_prob_dist(self, state):
+        return self.__transition_cnt[state] / sum(self.__transition_cnt[state])
 
-    def count_up_trainsition(self, char, transition_char):
-        char_idx = self.__unique_char_set.index(char)
-        trainsition_char_idx = self.__unique_char_set.index(transition_char)
-        self.__transition_cnt[char_idx][trainsition_char_idx] += 1
+    def count_up_trainsition(self, state, transition_state):
+        self.__transition_cnt[state][transition_state] += 1
 
     def get_trainsition_cnt(self):
         return self.__transition_cnt[::]
 
-    def get_next_word_base_prob(self, char):
-        __p = self.get_given_char_prob_dist(char)
-        return np_rand.choice(self.__unique_char_set, 1, p=__p)[0]
+    def get_next_word_base_prob(self, state):
+        __p = self.get_given_state_prob_dist(state)
+        return np_rand.choice(self.__state_len, 1, p=__p)[0]
+
+    def save_prob(self, fname):
+        print("save trainsition count:", fname)
+        np.save(fname, self.__transition_cnt)
+
+    def load_prob(self, fname):
+        return np.load(fname)
